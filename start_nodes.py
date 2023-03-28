@@ -6,17 +6,17 @@ if 'AdminConfig' not in globals():
     print("Error: This script should be run using wsadmin")
     sys.exit(1)
 
-# Get the cell name using AdminConfig
+# Get the cell name using AdminControl
 cell_name = AdminControl.getCell()
 
-# Get the list of nodes using AdminTask
-node_list = AdminTask.listNodes().splitlines()
+# Get the list of servers using AdminTask
+server_list = AdminTask.listServers('[-serverType APPLICATION_SERVER -serverType NODE_AGENT]').splitlines()
 
-# Start each node in the cell using AdminControl
-for node_name in node_list:
-    node_agent_object_name = AdminControl.completeObjectName('type=NodeAgent,node=' + node_name + ',*')
-    if node_agent_object_name:
-        AdminControl.invoke(node_agent_object_name, 'start', '[]')
-        print("Started node: " + node_name)
+# Start each server in the cell using AdminControl
+for server_name in server_list:
+    server_object_name = AdminControl.completeObjectName('type=Server,node=' + cell_name + ',process=' + server_name + ',*')
+    if server_object_name:
+        AdminControl.startServer(server_object_name)
+        print("Started server: " + server_name)
     else:
-        print("Node agent object not found for node: " + node_name)
+        print("Server object not found for server: " + server_name)
