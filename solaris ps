@@ -1,1 +1,1 @@
-sudo netstat -anvp tcp | grep LISTEN | awk '{print $4}' | while read addr; do sudo pfiles $(sudo /usr/proc/bin/pfiles $(sudo pgrep -x -n -u `id -un` -U `id -un` | head -1) 2>/dev/null | grep "sockname: AF_INET" | grep "$addr" | awk '{print $2}') | grep -E "pid|port|sockname: AF_INET"; done
+pfiles $(netstat -an | grep ':80' | awk '{print $5}' | cut -d '.' -f 1-4) | grep -E '^  |PORT'
