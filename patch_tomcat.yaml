@@ -1,0 +1,30 @@
+---
+- name: Download and uncompress tar file
+  hosts: your_target_hosts
+  become: true
+
+  tasks:
+    - name: Ensure target directory exists
+      file:
+        path: /path/to/target_directory
+        state: directory
+
+    - name: Download tar file
+      get_url:
+        url: http://example.com/path/to/source.tar
+        dest: /path/to/source.tar
+
+    - name: Unarchive tar file
+      unarchive:
+        src: /path/to/source.tar
+        dest: /path/to/target_directory
+        remote_src: true
+        extra_opts: "--strip-components=1"
+        copy: no
+
+    - name: Create symbolic link to latest folder
+      file:
+        src: /path/to/target_directory
+        dest: /path/to/target_directory/latest
+        state: link
+        force: yes
