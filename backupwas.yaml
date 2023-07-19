@@ -1,0 +1,14 @@
+---
+- name: Crear carpeta, respaldar y comprimir
+  hosts: tu_host
+  gather_facts: false
+
+  tasks:
+    - name: Crear carpeta con timestamp
+      shell: mkdir -p /ruta/de/la/carpeta/{{ ansible_date_time.date }}
+      register: carpeta_creada
+      changed_when: carpeta_creada.rc == 0
+
+    - name: Respaldar y comprimir carpetas
+      shell: tar -czvf /ruta/de/la/carpeta/{{ ansible_date_time.date }}/respaldo.tar.gz /nyl/opt/IBM/WebSphere/AppServer8 /home/was/IBM /nyl/opt/IBM/InstallationManager
+      changed_when: false
