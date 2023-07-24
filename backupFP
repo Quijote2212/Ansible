@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Paths of the folders to backup
+folder1="/path/to/folder1"
+folder2="/path/to/folder2"
+
+# Destination paths for the compressed files
+destination1="/path/for/backup_folder1.tar.gz"
+destination2="/path/for/backup_folder2.tar.gz"
+
+# Compress folder1
+tar -czf "$destination1" "$folder1"
+
+# Check the compression status of folder1
+if [ $? -eq 0 ]; then
+    echo "Backup of folder1 completed successfully."
+else
+    echo "Backup of folder1 failed!"
+fi
+
+# Compress folder2
+tar -czf "$destination2" "$folder2"
+
+# Check the compression status of folder2
+if [ $? -eq 0 ]; then
+    echo "Backup of folder2 completed successfully."
+else
+    echo "Backup of folder2 failed!"
+fi
