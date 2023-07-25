@@ -1,0 +1,10 @@
+---
+- name: Update Application Version
+  hosts: your_target_host_or_group
+  become: yes
+
+  tasks:
+    - name: Find files with 'app0919' and replace with 'latest'
+      command: "grep -rl 'app0919' /nyl/opt/tomcat/servers | xargs sed -i 's/app0919/latest/g'"
+      args:
+        executable: /bin/bash
