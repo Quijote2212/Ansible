@@ -1,0 +1,19 @@
+---
+- name: Update Symbolic Link
+  hosts: your_target_host_or_group
+  become: yes
+
+  tasks:
+    - name: Unlink the old symbolic link
+      file:
+        src: /nyl/opt/tomcat/software/latest
+        state: absent
+        force: yes
+      register: unlink_result
+
+    - name: Create the new symbolic link
+      file:
+        src: /nyl/opt/tomcat/software/app0919
+        dest: /nyl/opt/tomcat/software/latest
+        state: link
+      when: unlink_result.changed
