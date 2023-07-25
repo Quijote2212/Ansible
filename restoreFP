@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Paths of the tar files to decompress
+tar_file1="/path/to/backup_folder1.tar.gz"
+tar_file2="/path/to/backup_folder2.tar.gz"
+
+# New destination paths for the original folders
+new_destination1="/new/path/for/folder1"
+new_destination2="/new/path/for/folder2"
+
+# Decompress folder1
+tar -xzf "$tar_file1" -C "$new_destination1"
+
+# Check the decompression status of folder1
+if [ $? -eq 0 ]; then
+    echo "Decompression of folder1 completed successfully."
+else
+    echo "Decompression of folder1 failed!"
+fi
+
+# Decompress folder2
+tar -xzf "$tar_file2" -C "$new_destination2"
+
+# Check the decompression status of folder2
+if [ $? -eq 0 ]; then
+    echo "Decompression of folder2 completed successfully."
+else
+    echo "Decompression of folder2 failed!"
+fi
+
+# Clean up the tar files
+rm "$tar_file1" "$tar_file2"
+
+# Move the original folders to the new destination
+mv "/path/to/folder1" "$new_destination1"
+mv "/path/to/folder2" "$new_destination2"
+
+# Check the move status for folder1
+if [ $? -eq 0 ]; then
+    echo "Folder1 moved to new destination successfully."
+else
+    echo "Failed to move folder1!"
+fi
+
+# Check the move status for folder2
+if [ $? -eq 0 ]; then
+    echo "Folder2 moved to new destination successfully."
+else
+    echo "Failed to move folder2!"
+fi
