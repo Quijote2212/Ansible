@@ -1,0 +1,27 @@
+---
+- name: Create Backup Folder and Execute Script
+  hosts: your_target_host_or_group
+  become: yes
+
+  tasks:
+    - name: Create the 'backup' folder
+      file:
+        path: /nyl/opt/IBM/WebSphere/backup
+        state: directory
+
+    - name: Download the backup script from the HTTPS server
+      get_url:
+        url: "https://example.com/path/to/backupFP16.sh"
+        dest: /tmp/backupFP16.sh
+
+    - name: Execute the backup script
+      shell: /bin/bash /tmp/backupFP16.sh
+      args:
+        chdir: /nyl/opt/IBM/WebSphere
+      register: script_output
+      changed_when: false
+
+    - name: Display script output
+      debug:
+        var: script_output.stdout_lines
+      when: script_output.stdout_lines is defined and script_output.stdout_lines | length > 0
