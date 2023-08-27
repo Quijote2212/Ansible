@@ -1,0 +1,13 @@
+---
+- name: Change owner and group of WebSphere folder and its contents
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Change owner and group recursively
+      file:
+        path: /nyl/opt/IBM/WebSphere/AppServer9
+        owner: was
+        group: was
+        state: directory
+        recurse: yes
