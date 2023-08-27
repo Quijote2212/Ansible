@@ -1,0 +1,16 @@
+- name: Copy and Set Ownership of etc folder
+  hosts: your_target_host
+  become: yes
+  
+  tasks:
+    - name: Copy etc folder to destination
+      copy:
+        src: /home/was/etc
+        dest: /home/svc_app2314_m/
+        remote_src: yes
+  
+    - name: Set ownership of copied folder
+      file:
+        path: /home/svc_app2314_m/etc
+        owner: svc_app2314_m
+        state: directory
