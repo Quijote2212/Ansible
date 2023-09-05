@@ -1,33 +1,33 @@
-# Importar las clases necesarias
+# Import the necessary classes
 from com.ibm.websphere.management import AdminClient
 from com.ibm.websphere.security import SSLConfig
 from com.ibm.websphere.security.ssl import SSLConfigHelper
 from java.util import HashMap
 
-# Definir la función para cambiar el puerto LDAP y activar SSL
+# Define the function to configure LDAP SSL
 def configureLDAPSSL():
-    # Conectar al servidor WebSphere
-    hostname = 'localhost'  # Cambia esto al nombre de host adecuado
-    port = 8880  # Cambia esto al puerto de administración adecuado
-    username = 'admin'  # Cambia esto al nombre de usuario adecuado
-    password = 'password'  # Cambia esto a la contraseña adecuada
+    # Connect to the WebSphere server
+    hostname = 'localhost'  # Change this to the correct hostname
+    port = 8880  # Change this to the correct admin port
+    username = 'admin'  # Change this to the correct username
+    password = 'password'  # Change this to the correct password
     client = AdminClient.connect(hostname + ':' + str(port), username, password)
 
-    # Obtener la configuración del servidor LDAP
+    # Get the LDAP server configuration
     ldapServer = AdminConfig.getid('/Cell:DefaultCell/Node:DefaultNode/Server:ldapServer/')
     ldapServerName = AdminConfig.showAttribute(ldapServer, 'name')
 
-    # Cambiar el puerto LDAP a 636
+    # Change the LDAP port to 636
     ldapServerPortProps = AdminConfig.list('Property', ldapServer)
     for prop in ldapServerPortProps.splitlines():
         propName = AdminConfig.showAttribute(prop, 'name')
         if propName == 'sslEnabled':
             AdminConfig.modify(prop, [['value', 'true']])
-            print('SSL habilitado en el servidor LDAP ' + ldapServerName)
+            print('SSL enabled on LDAP server ' + ldapServerName)
 
-    # Guardar la configuración
+    # Save the configuration
     AdminConfig.save()
-    print('Cambios guardados correctamente.')
+    print('Changes saved successfully.')
 
-# Llamar a la función para configurar LDAP con SSL
+# Call the function to configure LDAP with SSL
 configureLDAPSSL()
