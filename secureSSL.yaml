@@ -1,0 +1,23 @@
+- name: Modify sslEneble to sslEnable in security.xml files
+  hosts: all
+  become: yes  
+  tasks:
+    - name: Find security.xml files
+      find:
+        paths: /prod/sys/WebSphere/AppServer7/profiles/
+        patterns: security.xml
+      register: security_xml_files
+
+    - name: Modify sslEnable to true
+      replace:
+        path: "{{ item.path }}"
+        regexp: 'sslEnable="false"'
+        replace: 'sslEnable="true"'
+      with_items: "{{ security_xml_files.files }}"
+
+    - name: Modify ldapPort to 636
+      replace:
+        path: "{{ item.path }}"
+        regexp: 'ldapPort="389"'
+        replace: 'ldapPort="636"'
+      with_items: "{{ security_xml_files.files }}"
