@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# tomcat: Start/Stop the Tomcat server
+#
+# chkconfig: 2345 85 15
+# description: Apache Tomcat
+# processname: tomcat
+# pidfile: /var/run/tomcat.pid
+# config: /etc/tomcat.conf
+
+# Source function library.
+. /etc/init.d/functions
+
+# Configuration
+TOMCAT_USER=tomcat
+TOMCAT_HOME=/opt/tomcat
+TOMCAT_BIN=$TOMCAT_HOME/bin
+TOMCAT_PIDFILE=/var/run/tomcat.pid
+
+start() {
+    echo -n "Starting Tomcat: "
+    if [ -f $TOMCAT_PIDFILE ]; then
+        echo "already running"
+        return 1
+    else
+        daemon --user $TOMCAT_USER $TOMCAT_BIN/startup.sh
+        RETVAL=$?
+        PID=$(ps -ef | grep "[o]rg.apache.catalina.startup.Bootstrap" | awk '{print $2}')
+        echo $PID > $TOMCAT_PIDFILE
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+    fi
+}
+
+stop() {
+    echo -n "Stopping Tomcat: "
+    if [ -f $TOMCAT_PIDFILE ]; then
+        PID=$(cat $TOMCAT_PIDFILE)
+        kill $PID
+        RETVAL=$?
+        rm -f $TOMCAT_PIDFILE
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+    else
+        echo "not running"
+        return 1
+    fi
+}
+
+status() {
+    if [ -f $TOMCAT_PIDFILE ]; then
+        PID=$(cat $TOMCAT_PIDFILE)
+        if [ -n "$(ps -p $PID -o pid=)" ]; then
+            echo "Tomcat is running (pid $PID)"
+            return 0
+        else
+            echo "Tomcat is not running, but pid file exists"
+            return 1
+        fi
+    else
+        echo "Tomcat is not running"
+        return 3
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
